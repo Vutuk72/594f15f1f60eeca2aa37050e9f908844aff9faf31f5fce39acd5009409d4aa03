@@ -1,3 +1,7 @@
+# Název projektu – podle něj se jmenují obrazy, kontejnery i volume (ekospol-api, ekospol-db-1, ekospol_dbdata).
+# Bez něj by Compose vzal název složky, což je tady dlouhý hash repozitáře.
+name: ekospol
+
 services:
   # Databáze PostgreSQL. Data se ukládají do pojmenovaného volume "dbdata",
   # takže přežijí smazání kontejneru (docker compose down; zmizí jen s -v).
