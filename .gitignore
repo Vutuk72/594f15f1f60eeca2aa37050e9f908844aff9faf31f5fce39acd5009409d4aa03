@@ -1,15 +1,29 @@
+# Pozor: komentář musí být na samostatném řádku – git nepodporuje komentáře za pravidlem.
+
 # .NET
-bin/          ← zkompilované soubory .NET backendu
-obj/          ← dočasné soubory z buildu .NET
-.vs/          ← nastavení Visual Studia
-*.user        ← osobní nastavení projektu ve Visual Studiu
+# zkompilované soubory .NET backendu
+bin/
+# dočasné soubory z buildu .NET
+obj/
+# nastavení Visual Studia
+.vs/
+# osobní nastavení projektu ve Visual Studiu
+*.user
 
 # Angular / Node
-node_modules/ ← stažené knihovny pro Angular (stovky MB)
-dist/         ← sestavená verze Angularu
-.angular/     ← cache Angular CLI
+# stažené knihovny pro Angular (stovky MB)
+node_modules/
+# sestavená verze Angularu
+dist/
+# cache Angular CLI
+.angular/
 
-# IDE a tajne udaje
-.idea/        ← nastavení Rideru / IntelliJ
-.vscode/      ← nastavení VS Code
-.env          ← soubor s hesly (třeba do databáze pro Docker Compose)
+# IDE
+# nastavení Rideru / IntelliJ
+.idea/
+# nastavení VS Code
+.vscode/
+
+# Tajné údaje
+# soubor s hesly (třeba do databáze pro Docker Compose) – commituje se jen .env.example
+.env
