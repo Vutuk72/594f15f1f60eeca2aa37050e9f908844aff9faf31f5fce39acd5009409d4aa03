@@ -1,0 +1,15 @@
+# .NET
+bin/          ← zkompilované soubory .NET backendu
+obj/          ← dočasné soubory z buildu .NET
+.vs/          ← nastavení Visual Studia
+*.user        ← osobní nastavení projektu ve Visual Studiu
+
+# Angular / Node
+node_modules/ ← stažené knihovny pro Angular (stovky MB)
+dist/         ← sestavená verze Angularu
+.angular/     ← cache Angular CLI
+
+# IDE a tajne udaje
+.idea/        ← nastavení Rideru / IntelliJ
+.vscode/      ← nastavení VS Code
+.env          ← soubor s hesly (třeba do databáze pro Docker Compose)
