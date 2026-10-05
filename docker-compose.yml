@@ -1,0 +1,39 @@
+services:
+  # Databáze PostgreSQL. Data se ukládají do pojmenovaného volume "dbdata",
+  # takže přežijí smazání kontejneru (docker compose down; zmizí jen s -v).
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      # $$ = doslovný znak $, proměnnou dosadí až shell uvnitř kontejneru
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Backend (.NET Web API). Hostname "db" = název služby výše.
+  api:
+    build: ./backend/Api
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5000:8080"
+
+  # Frontend (Angular servírovaný přes nginx), /api/ přeposílá na službu "api".
+  web:
+    build: ./frontend
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+volumes:
+  dbdata:
