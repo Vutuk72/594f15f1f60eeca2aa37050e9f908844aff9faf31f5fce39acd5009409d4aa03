@@ -1,8 +1,16 @@
+using Api.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Databáze: kdo potřebuje AppDbContext (např. kontroler), dostane ho připojený k PostgreSQL.
+// Connection string "DefaultConnection" se čte z konfigurace – v Dockeru z proměnné
+// ConnectionStrings__DefaultConnection (docker-compose.yml), lokálně z appsettings.Development.json.
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Přihlašování přes Keycloak: API samo nikoho nepřihlašuje, jen ověřuje JWT token,
 // který Angular dostal od Keycloaku a posílá v hlavičce "Authorization: Bearer ...".
@@ -36,6 +44,14 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+// Při startu doplní do databáze všechny migrace, které v ní ještě nejsou (složka Migrations).
+// Díky tomu tabulky vzniknou samy u každého, kdo projekt spustí – i na úplně prázdné databázi.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
