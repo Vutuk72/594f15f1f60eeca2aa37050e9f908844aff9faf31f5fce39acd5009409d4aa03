@@ -22,6 +22,8 @@
       <button type="button" (click)="call('/api/weatherforecast')">Veřejné<small>/api/weatherforecast</small></button>
       <button type="button" (click)="call('/api/me')">Přihlášený uživatel<small>/api/me</small></button>
       <button type="button" (click)="call('/api/admin')">Jen admin<small>/api/admin</small></button>
+      <button type="button" (click)="call('/api/users/me')">Můj profil<small>/api/users/me</small></button>
+      <button type="button" (click)="call('/api/users')">Všichni uživatelé<small>/api/users</small></button>
     </div>
 
     @if (result(); as r) {
