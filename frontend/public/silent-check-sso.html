@@ -1,0 +1,9 @@
+<!doctype html>
+<html>
+  <body>
+    <!-- Keycloak sem v neviditelném iframu přesměruje, aby zjistil, jestli je uživatel přihlášený. -->
+    <script>
+      parent.postMessage(location.href, location.origin);
+    </script>
+  </body>
+</html>
