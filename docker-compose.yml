@@ -23,13 +23,46 @@ services:
       timeout: 5s
       retries: 10
 
+  # Keycloak – přihlašování uživatelů (OpenID Connect). Admin konzole: http://localhost:8180
+  # Při prvním startu naimportuje realm "ekospol" (role, klient pro Angular, testovací uživatelé)
+  # z keycloak/realm-ekospol.json. Existující realm se při dalších startech nepřepisuje.
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.0
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USER}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      # Veřejná adresa, na které Keycloak vidí prohlížeč (a která bude v tokenech jako "iss").
+      KC_HOSTNAME: http://localhost:8180
+      # Požadavky z jiných kontejnerů (API přes http://keycloak:8080) dostanou interní adresy.
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HEALTH_ENABLED: "true"
+    volumes:
+      - keycloakdata:/opt/keycloak/data
+      - ./keycloak/realm-ekospol.json:/opt/keycloak/data/import/realm-ekospol.json:ro
+    ports:
+      - "8180:8080"
+    healthcheck:
+      # V obrazu není curl, proto dotaz na /health/ready přes bash (management port 9000).
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q UP <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
   # Backend (.NET Web API). Hostname "db" = název služby výše.
   api:
     build: ./backend/Api
     environment:
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      # Token vydává Keycloak pod veřejnou adresou (localhost:8180), ale z kontejneru
+      # se API ke Keycloaku dostane jen přes interní název služby "keycloak".
+      Keycloak__Authority: http://localhost:8180/realms/ekospol
+      Keycloak__MetadataAddress: http://keycloak:8080/realms/ekospol/.well-known/openid-configuration
     depends_on:
       db:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
     ports:
       - "5000:8080"
@@ -44,3 +77,4 @@ services:
 
 volumes:
   dbdata:
+  keycloakdata:
