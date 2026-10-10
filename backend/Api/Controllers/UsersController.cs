@@ -29,6 +29,7 @@ public class UsersController(AppDbContext db) : ControllerBase
         return Ok(user);
     }
 
+    //GET api/users – seznam všech uživatelů, jen pro roli admin.
     [HttpGet]
     [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetAllUsers()
@@ -36,7 +37,7 @@ public class UsersController(AppDbContext db) : ControllerBase
         var u = await db.Users.AsNoTracking().ToListAsync();
         return Ok(u);
     }
-    // TODO (vy): GET api/users – seznam všech uživatelů, jen pro roli admin.
+
 
     // TODO (vy): PUT api/users/me – vytvoří nebo upraví záznam přihlášeného uživatele (upsert).
 }
