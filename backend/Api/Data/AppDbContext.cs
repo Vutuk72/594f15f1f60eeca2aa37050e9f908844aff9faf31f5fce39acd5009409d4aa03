@@ -22,11 +22,11 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("users");
 
-            entity.HasIndex(e => e.TelNumbers, "users_telnumber_id").IsUnique();
+            entity.HasIndex(e => e.TelNumbers, "users_telnumber_key").IsUnique();
 
             entity.HasIndex(e => e.KeycloakId, "users_keycloak_id_key").IsUnique();
 
-            entity.HasIndex(e => e.Email, "users_email_id").IsUnique();
+            entity.HasIndex(e => e.Email, "users_email_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.KeycloakId)

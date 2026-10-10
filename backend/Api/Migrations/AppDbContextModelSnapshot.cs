@@ -56,13 +56,13 @@ namespace Api.Migrations
                     b.HasKey("Id")
                         .HasName("users_pkey");
 
-                    b.HasIndex(new[] { "Email" }, "users_email_id")
+                    b.HasIndex(new[] { "Email" }, "users_email_key")
                         .IsUnique();
 
                     b.HasIndex(new[] { "KeycloakId" }, "users_keycloak_id_key")
                         .IsUnique();
 
-                    b.HasIndex(new[] { "TelNumbers" }, "users_telnumber_id")
+                    b.HasIndex(new[] { "TelNumbers" }, "users_telnumber_key")
                         .IsUnique();
 
                     b.ToTable("users", (string)null);
