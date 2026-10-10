@@ -31,9 +31,25 @@ export class App {
     });
   }
 
+  // Formulář "Můj profil" – odešle jméno a telefon na PUT /api/users/me (vytvoří nebo upraví záznam).
+  protected saveProfile(name: string, telNumbers: string): void {
+    const url = '/api/users/me';
+    this.http.put(url, { name: name || null, telNumbers }).subscribe({
+      next: (body) => this.result.set({ url: `PUT ${url}`, status: 200, body }),
+      error: (err: HttpErrorResponse) =>
+        this.result.set({
+          url: `PUT ${url}`,
+          status: err.status,
+          // U 400 vrací API popis chyb validace – ten chceme vidět celý.
+          body: err.status === 400 ? err.error : this.errorText(err.status),
+        }),
+    });
+  }
+
   private errorText(status: number): string {
     if (status === 401) return 'Nepřihlášen – endpoint vyžaduje přihlášení.';
     if (status === 403) return 'Přihlášen, ale chybí role admin.';
+    if (status === 404) return 'Nenalezeno.';
     return 'Chyba při volání API.';
   }
 }

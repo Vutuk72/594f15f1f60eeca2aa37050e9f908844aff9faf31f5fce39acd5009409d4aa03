@@ -34,6 +34,24 @@
     }
   </section>
 
+  @if (auth.authenticated()) {
+    <section class="card">
+      <h2>Můj profil</h2>
+      <p>Uloží se do tabulky users (PUT /api/users/me). E-mail se vezme z Keycloaku.</p>
+      <form class="profile" (submit)="$event.preventDefault(); saveProfile(name.value, tel.value)">
+        <label>
+          Jméno
+          <input #name type="text" maxlength="100" autocomplete="name" />
+        </label>
+        <label>
+          Telefon
+          <input #tel type="tel" placeholder="+420777123456" autocomplete="tel" />
+        </label>
+        <button type="submit" class="primary">Uložit</button>
+      </form>
+    </section>
+  }
+
   <section class="card hint">
     Testovací účty: <b>user</b> / user (role user), <b>admin</b> / admin (role user + admin).
   </section>
