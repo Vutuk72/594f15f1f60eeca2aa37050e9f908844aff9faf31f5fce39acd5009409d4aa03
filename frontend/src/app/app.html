@@ -55,7 +55,7 @@
   @if (auth.isAdmin()) {
     <section class="card">
       <h2>Přidat kontakt</h2>
-      <p>POST /api/users – jen admin. Telefon se schválně nekontroluje na formát.</p>
+      <p>POST /api/users – jen admin. ukázka zapomenuté bussines logiky to telefoního čísla lze uložit text</p>
       <form
         class="profile"
         (submit)="$event.preventDefault(); createContact(cName.value, cTel.value, cEmail.value)"
