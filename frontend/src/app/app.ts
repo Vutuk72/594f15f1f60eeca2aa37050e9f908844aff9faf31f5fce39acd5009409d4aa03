@@ -46,6 +46,30 @@ export class App {
     });
   }
 
+  // Formulář "Přidat kontakt" (jen admin) – POST /api/users. Prázdná pole posílá jako null.
+  protected createContact(name: string, telNumbers: string, email: string): void {
+    const url = '/api/users';
+    this.http.post(url, { name: name || null, telNumbers, email: email || null }).subscribe({
+      next: (body) => this.result.set({ url: `POST ${url}`, status: 200, body }),
+      error: (err: HttpErrorResponse) =>
+        this.result.set({
+          url: `POST ${url}`,
+          status: err.status,
+          body: err.status === 400 ? err.error : this.errorText(err.status),
+        }),
+    });
+  }
+
+  // Testovací data (jen admin): POST vygeneruje uživatele, DELETE je zase smaže.
+  protected testData(method: 'POST' | 'DELETE'): void {
+    const url = method === 'POST' ? '/api/test-data?count=50' : '/api/test-data';
+    this.http.request(method, url).subscribe({
+      next: (body) => this.result.set({ url: `${method} ${url}`, status: 200, body }),
+      error: (err: HttpErrorResponse) =>
+        this.result.set({ url: `${method} ${url}`, status: err.status, body: this.errorText(err.status) }),
+    });
+  }
+
   private errorText(status: number): string {
     if (status === 401) return 'Nepřihlášen – endpoint vyžaduje přihlášení.';
     if (status === 403) return 'Přihlášen, ale chybí role admin.';

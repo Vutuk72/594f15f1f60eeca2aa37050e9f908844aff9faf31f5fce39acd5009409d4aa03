@@ -3,7 +3,6 @@ using Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Api.Models;
 
 namespace Api.Controllers;
 
@@ -65,6 +64,25 @@ public class UsersController(AppDbContext db) : ControllerBase
         user.Email = email;
 
         // 5) Uložit do databáze
+        await db.SaveChangesAsync();
+
+        return Ok(user);
+    }
+
+    // POST api/users – admin přidá kontakt ručně.
+    [HttpPost]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> Create(CreateUserRequest request)
+    {
+        var user = new User
+        {
+            KeycloakId = Guid.NewGuid(),   // kontakt nemá účet v Keycloaku
+            Name = request.Name,
+            TelNumbers = request.TelNumbers,
+            Email = request.Email,
+        };
+
+        db.Users.Add(user);
         await db.SaveChangesAsync();
 
         return Ok(user);
