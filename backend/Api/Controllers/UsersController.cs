@@ -71,7 +71,7 @@ public class UsersController(AppDbContext db) : ControllerBase
 
     // POST api/users – admin přidá kontakt ručně.
     [HttpPost]
-    [Authorize(Roles = "admin")]
+    [Authorize]
     public async Task<IActionResult> Create(CreateUserRequest request)
     {
         var user = new User
