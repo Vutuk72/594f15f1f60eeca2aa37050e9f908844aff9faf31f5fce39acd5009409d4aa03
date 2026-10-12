@@ -47,8 +47,11 @@ services:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q UP <&3"]
       interval: 10s
       timeout: 5s
-      retries: 30
-      start_period: 20s
+      retries: 6
+      # Keycloak v režimu start-dev startuje pomalu (na slabším PC i několik minut).
+      # Během start_period se neúspěšné pokusy nepočítají; zdravý je hned, jak odpoví.
+      start_period: 10m
+      start_interval: 5s
 
   # Backend (.NET Web API). Hostname "db" = název služby výše.
   api:
