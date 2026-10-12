@@ -19,11 +19,19 @@
     <h2>Vyzkoušej API</h2>
     <p>Každé tlačítko volá jiný endpoint s jinou úrovní ochrany.</p>
     <div class="buttons">
-      <button type="button" (click)="call('/api/weatherforecast')">Veřejné<small>/api/weatherforecast</small></button>
-      <button type="button" (click)="call('/api/me')">Přihlášený uživatel<small>/api/me</small></button>
+      <button type="button" (click)="call('/api/weatherforecast')">
+        test serveru<small>/api/weatherforecast test serveru</small>
+      </button>
+      <button type="button" (click)="call('/api/me')">
+        Přihlášený uživatel<small>/api/me</small>
+      </button>
       <button type="button" (click)="call('/api/admin')">Jen admin<small>/api/admin</small></button>
-      <button type="button" (click)="call('/api/users/me')">Můj profil<small>/api/users/me</small></button>
-      <button type="button" (click)="call('/api/users')">Všichni uživatelé<small>/api/users</small></button>
+      <button type="button" (click)="call('/api/users/me')">
+        Můj profil<small>/api/users/me</small>
+      </button>
+      <button type="button" (click)="call('/api/users')">
+        Společný seznam<small>/api/users</small>
+      </button>
     </div>
 
     @if (result(); as r) {
@@ -55,7 +63,10 @@
   @if (auth.isAdmin()) {
     <section class="card">
       <h2>Přidat kontakt</h2>
-      <p>POST /api/users – jen admin. ukázka zapomenuté bussines logiky to telefoního čísla lze uložit text</p>
+      <p>
+        POST /api/users – jen admin. ukázka zapomenuté bussines logiky do telefoního čísla lze
+        uložit text
+      </p>
       <form
         class="profile"
         (submit)="$event.preventDefault(); createContact(cName.value, cTel.value, cEmail.value)"
@@ -78,9 +89,14 @@
 
     <section class="card">
       <h2>Testovací data</h2>
-      <p>Náhodní uživatelé s e-mailem na test.ekospol.local. Smazání odstraní jen je, skutečné záznamy zůstanou.</p>
+      <p>
+        Náhodní uživatelé s e-mailem na test.ekospol.local. Smazání odstraní jen je, skutečné
+        záznamy zůstanou.
+      </p>
       <div class="buttons">
-        <button type="button" class="primary" (click)="testData('POST')">Vygenerovat 50 uživatelů</button>
+        <button type="button" class="primary" (click)="testData('POST')">
+          Vygenerovat 50 uživatelů
+        </button>
         <button type="button" (click)="testData('DELETE')">Smazat testovací data</button>
       </div>
     </section>
